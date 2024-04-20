@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 
 @Getter
@@ -14,10 +14,13 @@ import java.time.LocalDateTime;
 public class EndpointHitRequestDto {
     @NotBlank
     private String app;
+
     @NotBlank
     private String uri;
+
     @NotBlank
     private String ip;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime timestamp;
 }
