@@ -20,12 +20,19 @@ public class EventControllerAdminApi {
     private final EventService eventService;
 
     @PatchMapping("/events/{eventId}")
-    public EventFullDto updateEventByEventId(@PathVariable @Positive long eventId, @RequestBody @Valid UpdateEventRequestDto updateEventRequestDto) {
+    public EventFullDto updateEventByEventId(@PathVariable @Positive long eventId,
+                                             @RequestBody @Valid UpdateEventRequestDto updateEventRequestDto) {
         return eventService.updateEventByEventId(eventId, updateEventRequestDto);
     }
 
     @GetMapping("/events")
-    public List<EventFullDto> getEventsAdminApi(@RequestParam(defaultValue = "") List<Long> users, @RequestParam(defaultValue = "") List<EventState> states, @RequestParam(defaultValue = "") List<Integer> categories, @RequestParam(required = false) LocalDateTime rangeStart, @RequestParam(required = false) LocalDateTime rangeEnd, @RequestParam(defaultValue = "0") @PositiveOrZero int from, @RequestParam(defaultValue = "10") @Positive int size) {
+    public List<EventFullDto> getEventsAdminApi(@RequestParam(defaultValue = "") List<Long> users,
+                                                @RequestParam(defaultValue = "") List<EventState> states,
+                                                @RequestParam(defaultValue = "") List<Integer> categories,
+                                                @RequestParam(required = false) LocalDateTime rangeStart,
+                                                @RequestParam(required = false) LocalDateTime rangeEnd,
+                                                @RequestParam(defaultValue = "0") @PositiveOrZero int from,
+                                                @RequestParam(defaultValue = "10") @Positive int size) {
         return eventService.getEventsAdminApi(users, states, categories, rangeStart, rangeEnd, from, size);
     }
 }

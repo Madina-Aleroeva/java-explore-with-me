@@ -16,14 +16,16 @@ public class Validator {
     private final EventRepository eventRepo;
 
     public static void checkEvent1HrAhead(LocalDateTime eventDate) {
-        LocalDateTime minTime = LocalDateTime.now().plusHours(1);
+        LocalDateTime minTime = LocalDateTime.now()
+                .plusHours(1);
         if (eventDate.isBefore(minTime)) {
             throw new BadRequestException("Event must start at least 1 hour from now");
         }
     }
 
     public static void checkEvent2HrsAhead(LocalDateTime eventDate) {
-        LocalDateTime minTime = LocalDateTime.now().plusHours(2);
+        LocalDateTime minTime = LocalDateTime.now()
+                .plusHours(2);
         if (eventDate.isBefore(minTime)) {
             throw new BadRequestException("Event must start at least 2 hours from now");
         }

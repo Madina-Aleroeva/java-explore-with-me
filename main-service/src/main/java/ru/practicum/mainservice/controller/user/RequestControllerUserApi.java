@@ -35,12 +35,15 @@ public class RequestControllerUserApi {
     }
 
     @GetMapping("/{userId}/events/{eventId}/requests")
-    public List<RequestDto> getRequestsByEventId(@PathVariable @Positive long userId, @PathVariable @Positive long eventId) {
+    public List<RequestDto> getRequestsByEventId(@PathVariable @Positive long userId,
+                                                 @PathVariable @Positive long eventId) {
         return requestService.getRequestsByEventId(userId, eventId);
     }
 
     @PatchMapping("/{userId}/events/{eventId}/requests")
-    public RequestStatusUpdateResultDto updateRequestsStatus(@PathVariable @Positive long userId, @PathVariable @Positive long eventId, @RequestBody @Valid RequestStatusUpdateRequestDto updateDto) {
+    public RequestStatusUpdateResultDto updateRequestsStatus(@PathVariable @Positive long userId,
+                                                             @PathVariable @Positive long eventId,
+                                                             @RequestBody @Valid RequestStatusUpdateRequestDto updateDto) {
         return requestService.updateRequestsStatus(userId, eventId, updateDto);
     }
 }

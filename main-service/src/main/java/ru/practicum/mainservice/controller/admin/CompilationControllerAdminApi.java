@@ -30,7 +30,8 @@ public class CompilationControllerAdminApi {
     }
 
     @PatchMapping("/compilations/{compId}")
-    public CompilationDto updateCompilation(@PathVariable @Positive int compId, @RequestBody @Valid UpdateCompilationRequestDto updateCompilationRequestDto) {
+    public CompilationDto updateCompilation(@PathVariable @Positive int compId,
+                                            @RequestBody @Valid UpdateCompilationRequestDto updateCompilationRequestDto) {
         return compilationService.updateCompilation(compId, updateCompilationRequestDto);
     }
 }

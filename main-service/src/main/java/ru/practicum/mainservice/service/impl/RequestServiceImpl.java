@@ -3,7 +3,6 @@ package ru.practicum.mainservice.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
 import ru.practicum.mainservice.dto.request.*;
 import ru.practicum.mainservice.exception.*;
 import ru.practicum.mainservice.mapper.RequestMapper;
@@ -12,10 +11,9 @@ import ru.practicum.mainservice.repository.RequestRepository;
 import ru.practicum.mainservice.service.RequestService;
 import ru.practicum.mainservice.valid.Validator;
 
-import javax.validation.Valid;
 import java.util.*;
 
-@Validated
+
 @Service
 @RequiredArgsConstructor
 public class RequestServiceImpl implements RequestService {
@@ -29,11 +27,13 @@ public class RequestServiceImpl implements RequestService {
         User user = validator.findUserOrThrow(userId);
         Request request;
 
-        if (userId == event.getInitiator().getId()) {
+        if (userId == event.getInitiator()
+                .getId()) {
             throw new ConflictException("Initiator of event cannot be requester");
         }
 
-        if (!event.getState().equals(EventState.PUBLISHED)) {
+        if (!event.getState()
+                .equals(EventState.PUBLISHED)) {
             throw new ConflictException("Can't participate in an unpublished event");
         }
 
@@ -42,12 +42,24 @@ public class RequestServiceImpl implements RequestService {
         }
 
         if (!event.isRequestModeration()) {
-            request = Request.builder().event(event).requester(user).status(RequestStatus.CONFIRMED).build();
+            request = Request.builder()
+                    .event(event)
+                    .requester(user)
+                    .status(RequestStatus.CONFIRMED)
+                    .build();
         } else {
             if (event.getParticipantLimit() == 0) {
-                request = Request.builder().event(event).requester(user).status(RequestStatus.CONFIRMED).build();
+                request = Request.builder()
+                        .event(event)
+                        .requester(user)
+                        .status(RequestStatus.CONFIRMED)
+                        .build();
             } else {
-                request = Request.builder().event(event).requester(user).status(RequestStatus.PENDING).build();
+                request = Request.builder()
+                        .event(event)
+                        .requester(user)
+                        .status(RequestStatus.PENDING)
+                        .build();
             }
         }
 
@@ -75,9 +87,11 @@ public class RequestServiceImpl implements RequestService {
     @Transactional
     @Override
     public RequestDto cancelRequest(long userId, long requestId) {
-        Request request = requestRepository.findById(requestId).orElseThrow(() -> new NotFoundException(String.format("Request with id=%d was not found", requestId)));
+        Request request = requestRepository.findById(requestId)
+                .orElseThrow(() -> new NotFoundException(String.format("Request with id=%d was not found", requestId)));
 
-        if (request.getRequester().getId() != userId) {
+        if (request.getRequester()
+                .getId() != userId) {
             throw new ConflictException(String.format("User with id: %d is not the requester" + " of the event and cannot cancel the request", userId));
         }
 
@@ -88,14 +102,19 @@ public class RequestServiceImpl implements RequestService {
 
     @Transactional
     @Override
-    public @Valid RequestStatusUpdateResultDto updateRequestsStatus(long userId, long eventId, RequestStatusUpdateRequestDto updateDto) {
+    public RequestStatusUpdateResultDto updateRequestsStatus(long userId, long eventId,
+                                                             RequestStatusUpdateRequestDto updateDto) {
         Event event = validator.findUserEventOrThrow(eventId, userId);
         List<Request> requests = requestRepository.findAllByIdIn(updateDto.getRequestIds());
 
-        RequestStatusUpdateResultDto resultDto = RequestStatusUpdateResultDto.builder().confirmedRequests(new ArrayList<>()).rejectedRequests(new ArrayList<>()).build();
+        RequestStatusUpdateResultDto resultDto = RequestStatusUpdateResultDto.builder()
+                .confirmedRequests(new ArrayList<>())
+                .rejectedRequests(new ArrayList<>())
+                .build();
 
         if (!event.isRequestModeration() || event.getParticipantLimit() == 0) {
-            resultDto.getConfirmedRequests().addAll(RequestMapper.toListOfRequestDto(requests));
+            resultDto.getConfirmedRequests()
+                    .addAll(RequestMapper.toListOfRequestDto(requests));
             return resultDto;
         }
 
@@ -104,13 +123,17 @@ public class RequestServiceImpl implements RequestService {
             throw new ConflictException("Limit of requests for participation is over");
         }
 
-        if (!requests.stream().allMatch(r -> r.getStatus().equals(RequestStatus.PENDING))) {
+        if (!requests.stream()
+                .allMatch(r -> r.getStatus()
+                        .equals(RequestStatus.PENDING))) {
             throw new ConflictException("All requests should be in status PENDING");
         }
 
-        if (updateDto.getStatus().equals(StatusOfUpdateRequest.REJECTED)) {
+        if (updateDto.getStatus()
+                .equals(StatusOfUpdateRequest.REJECTED)) {
             requests.forEach(r -> r.setStatus(RequestStatus.REJECTED));
-            resultDto.getRejectedRequests().addAll(RequestMapper.toListOfRequestDto(requests));
+            resultDto.getRejectedRequests()
+                    .addAll(RequestMapper.toListOfRequestDto(requests));
             return resultDto;
         }
 
@@ -119,11 +142,13 @@ public class RequestServiceImpl implements RequestService {
         for (Request request : requests) {
             if (reserve > 0) {
                 request.setStatus(RequestStatus.CONFIRMED);
-                resultDto.getConfirmedRequests().add(RequestMapper.toRequestDto(request));
+                resultDto.getConfirmedRequests()
+                        .add(RequestMapper.toRequestDto(request));
                 --reserve;
             } else {
                 request.setStatus(RequestStatus.REJECTED);
-                resultDto.getRejectedRequests().add(RequestMapper.toRequestDto(request));
+                resultDto.getRejectedRequests()
+                        .add(RequestMapper.toRequestDto(request));
             }
         }
 

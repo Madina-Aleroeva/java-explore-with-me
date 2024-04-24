@@ -20,8 +20,10 @@ public interface EventService {
 
     EventFullDto updateEventByUserIdAndEventId(long userId, long eventId, UpdateEventRequestDto updateEventRequestDto);
 
-    List<EventShortDto> getEventsPublicApi(String text, List<Integer> categories, Boolean paid, LocalDateTime rangeStart,
-                                           LocalDateTime rangeEnd, boolean onlyAvailable, String sort, int from, int size);
+    List<EventShortDto> getEventsPublicApi(String text, List<Integer> categories, Boolean paid,
+                                           LocalDateTime rangeStart,
+                                           LocalDateTime rangeEnd, boolean onlyAvailable, String sort, int from,
+                                           int size);
 
     EventFullDto getEventById(long eventId);
 }

@@ -25,7 +25,16 @@ public class EventControllerPublicApi {
     private String serviceName;
 
     @GetMapping("/events")
-    public List<EventShortDto> getEventsPublicApi(@RequestParam(defaultValue = "") String text, @RequestParam(defaultValue = "") List<Integer> categories, @RequestParam(required = false) Boolean paid, @RequestParam(required = false) LocalDateTime rangeStart, @RequestParam(required = false) LocalDateTime rangeEnd, @RequestParam(required = false) boolean onlyAvailable, @RequestParam(defaultValue = "") String sort, @RequestParam(defaultValue = "0") @PositiveOrZero int from, @RequestParam(defaultValue = "10") @Positive int size, HttpServletRequest request) {
+    public List<EventShortDto> getEventsPublicApi(@RequestParam(defaultValue = "") String text,
+                                                  @RequestParam(defaultValue = "") List<Integer> categories,
+                                                  @RequestParam(required = false) Boolean paid,
+                                                  @RequestParam(required = false) LocalDateTime rangeStart,
+                                                  @RequestParam(required = false) LocalDateTime rangeEnd,
+                                                  @RequestParam(required = false) boolean onlyAvailable,
+                                                  @RequestParam(defaultValue = "") String sort,
+                                                  @RequestParam(defaultValue = "0") @PositiveOrZero int from,
+                                                  @RequestParam(defaultValue = "10") @Positive int size,
+                                                  HttpServletRequest request) {
         sendRequestToStatService(request);
 
         return eventService.getEventsPublicApi(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
@@ -39,7 +48,12 @@ public class EventControllerPublicApi {
     }
 
     private void sendRequestToStatService(HttpServletRequest request) {
-        EndpointHitRequestDto endpointHitRequestDto = EndpointHitRequestDto.builder().app(serviceName).ip(request.getRemoteAddr()).uri(request.getRequestURI()).timestamp(LocalDateTime.now()).build();
+        EndpointHitRequestDto endpointHitRequestDto = EndpointHitRequestDto.builder()
+                .app(serviceName)
+                .ip(request.getRemoteAddr())
+                .uri(request.getRequestURI())
+                .timestamp(LocalDateTime.now())
+                .build();
 
         statClient.addHit(endpointHitRequestDto);
     }
