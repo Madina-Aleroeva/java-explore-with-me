@@ -14,10 +14,12 @@ public class Validator {
     private final UserRepository userRepo;
     private final CategoryRepository catRepo;
     private final EventRepository eventRepo;
+    private final CommentRepository commentRepo;
 
     public static void checkEvent1HrAhead(LocalDateTime eventDate) {
         LocalDateTime minTime = LocalDateTime.now()
                 .plusHours(1);
+
         if (eventDate.isBefore(minTime)) {
             throw new BadRequestException("Event must start at least 1 hour from now");
         }
@@ -26,6 +28,7 @@ public class Validator {
     public static void checkEvent2HrsAhead(LocalDateTime eventDate) {
         LocalDateTime minTime = LocalDateTime.now()
                 .plusHours(2);
+
         if (eventDate.isBefore(minTime)) {
             throw new BadRequestException("Event must start at least 2 hours from now");
         }
@@ -36,7 +39,7 @@ public class Validator {
                 .orElseThrow(() -> new NotFoundException("User id=" + userId + " not found"));
     }
 
-    public Category findCatOrThrow(int categoryId) {
+    public Category findCategoryOrThrow(int categoryId) {
         return catRepo.findById(categoryId)
                 .orElseThrow(() -> new NotFoundException("Category id=" + categoryId + " not found"));
     }
@@ -49,5 +52,10 @@ public class Validator {
     public Event findEventOrThrow(long eventId) {
         return eventRepo.findById(eventId)
                 .orElseThrow(() -> new NotFoundException("Event id=" + eventId + " not found"));
+    }
+
+    public Comment findCommentOrThrow(long commentId, long userId, long eventId) {
+        return commentRepo.findByIdAndUserIdAndEventId(commentId, userId, eventId)
+                .orElseThrow(() -> new NotFoundException("Comment id=" + commentId + " not found"));
     }
 }
