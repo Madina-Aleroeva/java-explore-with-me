@@ -56,6 +56,15 @@ CREATE TABLE IF NOT EXISTS compilation_events
     CONSTRAINT uniqueCompilationEvent UNIQUE (compilation_id, event_id)
 );
 
+CREATE TABLE IF NOT EXISTS comments (
+    id          BIGINT      GENERATED   ALWAYS      AS IDENTITY PRIMARY KEY,
+    event_id    BIGINT      NOT NULL    REFERENCES  events(id),
+    user_id     BIGINT      NOT NULL    REFERENCES  users(id),
+    text        VARCHAR     NOT NULL,
+    status      VARCHAR     NOT NULL,
+    created     TIMESTAMP   NOT NULL
+);
+
 DELETE
 FROM requests;
 DELETE
@@ -64,6 +73,8 @@ DELETE
 FROM users;
 DELETE
 FROM categories;
+DELETE
+FROM comments;
 
 ALTER TABLE users
     ALTER COLUMN id RESTART WITH 1;
@@ -72,4 +83,6 @@ ALTER TABLE categories
 ALTER TABLE events
     ALTER COLUMN id RESTART WITH 1;
 ALTER TABLE requests
+    ALTER COLUMN id RESTART WITH 1;
+ALTER TABLE comments
     ALTER COLUMN id RESTART WITH 1;
