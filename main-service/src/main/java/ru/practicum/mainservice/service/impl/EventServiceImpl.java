@@ -54,12 +54,14 @@ public class EventServiceImpl implements EventService {
                     .equals(stateAction)) {
                 throw new ConflictException("Field StateAction is incorrect");
             }
+
             state = StateAction.valueOf(stateAction);
 
             if (!event.getState()
                     .equals(EventState.PENDING) && state.equals(StateAction.PUBLISH_EVENT)) {
                 throw new ConflictException("Event must be PENDING state to be published");
             }
+
             if (event.getState()
                     .equals(EventState.PUBLISHED) && state.equals(StateAction.REJECT_EVENT)) {
                 throw new ConflictException("Event cannot be canceled if already published");
@@ -131,7 +133,7 @@ public class EventServiceImpl implements EventService {
         User user = validator.findUserOrThrow(userId);
 
         int categoryId = eventCreationDto.getCategory();
-        Category category = validator.findCatOrThrow(categoryId);
+        Category category = validator.findCategoryOrThrow(categoryId);
 
         Event event = EventMapper.toEvent(eventCreationDto);
         event.setEventDate(eventDate);
@@ -191,7 +193,7 @@ public class EventServiceImpl implements EventService {
 
         Category category = null;
         if (updateEventRequestDto.getCategory() != null) {
-            category = validator.findCatOrThrow(updateEventRequestDto.getCategory());
+            category = validator.findCategoryOrThrow(updateEventRequestDto.getCategory());
         }
 
         Event event = validator.findUserEventOrThrow(eventId, userId);
